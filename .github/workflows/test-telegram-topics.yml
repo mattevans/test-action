@@ -30,7 +30,9 @@ jobs:
         with:
           to: ${{ secrets.TELEGRAM_TO }}
           token: ${{ secrets.TELEGRAM_TOKEN }}
-          message_thread_id: ${{ github.event.inputs.topic_id }}
+          # Using args parameter for message_thread_id as it's not officially supported
+          args: |
+            -message.thread.id=${{ github.event.inputs.topic_id }}
           message: |
             📣 TEST MESSAGE TO TOPIC ${{ github.event.inputs.topic_id }}
             

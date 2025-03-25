@@ -45,13 +45,24 @@ jobs:
           else
             echo "From repository secret: ${{ secrets.TELEGRAM_TOPIC_ID }}"
           fi
+          
+      - name: Determine topic ID
+        id: topic
+        run: |
+          TOPIC_ID="${{ github.event.inputs.topic_id }}"
+          if [ -z "$TOPIC_ID" ]; then
+            TOPIC_ID="${{ secrets.TELEGRAM_TOPIC_ID }}"
+          fi
+          echo "id=$TOPIC_ID" >> $GITHUB_OUTPUT
 
       - name: Send Telegram notification for releases
         uses: appleboy/telegram-action@master
         with:
           to: ${{ secrets.TELEGRAM_TO }}
           token: ${{ secrets.TELEGRAM_TOKEN }}
-          message_thread_id: ${{ github.event.inputs.topic_id != '' && github.event.inputs.topic_id || secrets.TELEGRAM_TOPIC_ID }}
+          # Using args parameter for message_thread_id
+          args: |
+            -message.thread.id=${{ steps.topic.outputs.id }}
           message: |
             🚀 New Release: *${{ github.repository }}* ${{ github.event.inputs.release_tag }}
             
