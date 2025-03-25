@@ -32,15 +32,15 @@ If your group has topics enabled:
 2. **Finding the correct Topic ID**:
    - Create a new topic in your group
    - Look at the URL when you're in that topic - the last number is often the topic ID
-   - Or use the "Test Telegram Topics" workflow to try different IDs
+   - Or use the "Test Topic Direct API" workflow to try different IDs
    
-3. **Important Note about Topics**:
-   - The Telegram action does not directly support `message_thread_id` as an input parameter
-   - We work around this by using the `args` parameter with the format: `args: -message.thread.id=2`
-   - The args parameter must be on a single line (not using the pipe `|` syntax)
+3. **Direct API for Topics**:
+   - Due to limitations with the action's handling of topics, we use direct API calls
+   - The "Manual Telegram Direct" workflow uses the Telegram API directly
+   - This ensures messages go to the correct topic
    
 4. **Topic testing**:
-   - Use the "Test Telegram Topics" workflow to send test messages to different topics
+   - Use the "Test Topic Direct API" workflow to send test messages to different topics
    - This helps confirm which topic ID corresponds to which channel
 
 ### Getting the correct Chat ID
@@ -58,7 +58,7 @@ If you're using a group chat, make sure to:
 Notifications are only sent manually:
 
 1. Go to "Actions" tab in the repository
-2. Select "Manual Telegram Notification" workflow
+2. Select "Manual Telegram Direct" workflow (recommended for topics)
 3. Click "Run workflow" button
 4. Enter the release tag (e.g., `v1.0.0`)
 5. Optionally add a custom message
@@ -66,6 +66,27 @@ Notifications are only sent manually:
 7. Click "Run workflow" to send the notification
 
 This allows you to control which releases get announced to your Telegram group.
+
+### Troubleshooting Topic Issues
+
+If messages aren't going to the correct topic:
+
+1. **Verify Topic ID**:
+   - General topic is usually `1`
+   - Custom topics start from `2` and go up sequentially
+   - Use the "Test Topic Direct API" workflow to confirm IDs
+
+2. **Use Direct API Method**:
+   - The "Manual Telegram Direct" workflow uses direct API calls
+   - This is more reliable for topic support than the GitHub Action
+
+3. **Check Bot Permissions**:
+   - Make sure the bot has admin privileges in the group
+   - Some groups require this for topic posting
+
+4. **Verify Topic Format**:
+   - Topic IDs should be simple numbers (`1`, `2`, etc.)
+   - Don't include any other text or symbols in the ID
 
 ### Troubleshooting "Not Found" Errors
 
@@ -91,7 +112,7 @@ If you keep seeing "Not Found" errors, try these steps in order:
    - Topic IDs should be simple numbers (`1`, `2`, etc.)
    - The General topic is usually `1`
    - Custom topics start from `2` onwards
-   - Try the "Test Telegram Topics" workflow to find the correct IDs
+   - Try the "Test Topic Direct API" workflow to find the correct IDs
    - Ensure you're using the correct `args` format: `-message.thread.id=X` (on a single line)
 
 5. **Test with Personal Chat**:
