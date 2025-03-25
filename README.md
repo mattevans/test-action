@@ -34,7 +34,12 @@ If your group has topics enabled:
    - Look at the URL when you're in that topic - the last number is often the topic ID
    - Or use the "Test Telegram Topics" workflow to try different IDs
    
-3. **Topic testing**:
+3. **Important Note about Topics**:
+   - The Telegram action does not directly support `message_thread_id` as an input parameter
+   - We work around this by using the `args` parameter with `-message.thread.id=X` format
+   - This is why we need the custom workflows for topic testing
+   
+4. **Topic testing**:
    - Use the "Test Telegram Topics" workflow to send test messages to different topics
    - This helps confirm which topic ID corresponds to which channel
 
@@ -87,6 +92,7 @@ If you keep seeing "Not Found" errors, try these steps in order:
    - The General topic is usually `1`
    - Custom topics start from `2` onwards
    - Try the "Test Telegram Topics" workflow to find the correct IDs
+   - Ensure you're using the correct `args` format: `-message.thread.id=X`
 
 5. **Test with Personal Chat**:
    - Try sending a message to your personal Telegram ID first
