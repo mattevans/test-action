@@ -60,9 +60,6 @@ jobs:
         with:
           to: ${{ secrets.TELEGRAM_TO }}
           token: ${{ secrets.TELEGRAM_TOKEN }}
-          # Using args parameter for message_thread_id
-          args: |
-            -message.thread.id=${{ steps.topic.outputs.id }}
           message: |
             🚀 New Release: *${{ github.repository }}* ${{ github.event.inputs.release_tag }}
             
@@ -75,4 +72,5 @@ jobs:
             [View Release](https://github.com/${{ github.repository }}/releases/tag/${{ github.event.inputs.release_tag }})
           format: markdown
           disable_web_page_preview: true
-          debug: true 
+          debug: true
+          args: -message.thread.id=${{ steps.topic.outputs.id }} 
