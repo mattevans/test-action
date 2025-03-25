@@ -9,11 +9,27 @@ This repository uses [Telegram Notify](https://github.com/marketplace/actions/te
 
 1. Create a Telegram bot using [@BotFather](https://t.me/botfather) and get the bot token
 2. Get your chat ID (you can use [@userinfobot](https://t.me/userinfobot))
-3. Add the bot to your group chat
+3. Add the bot to your group chat:
+   - Open the group
+   - Click the group name at the top
+   - Click "Add members"
+   - Search for your bot by username
+   - **Important**: After adding the bot, send at least one message in the group, or use the `/start` command
+   - Consider making the bot an admin in the group (required in some cases)
 4. Add the following secrets to your repository:
    - `TELEGRAM_TOKEN`: Your Telegram bot token
    - `TELEGRAM_TO`: Your chat ID (for group chats, use the format `-1001234567890`)
    - `TELEGRAM_TOPIC_ID`: If using a topic in a group, add the topic ID (e.g., `2`)
+
+### Getting the correct Chat ID
+
+If you're using a group chat, make sure to:
+
+1. Add your bot to the group
+2. Send a message in the group (important: mention the bot or use /start)
+3. Visit `https://api.telegram.org/bot<YOUR_BOT_TOKEN>/getUpdates`
+4. Look for a "chat" section with "id" - for groups, this will start with a minus sign (-)
+5. If using a topic, note the "message_thread_id" value
 
 ### Sending notifications
 
@@ -27,3 +43,39 @@ Notifications are only sent manually:
 6. Click "Run workflow" to send the notification
 
 This allows you to control which releases get announced to your Telegram group.
+
+### Troubleshooting "Not Found" Errors
+
+If you keep seeing "Not Found" errors, try these steps in order:
+
+1. **Verify Bot Setup**:
+   - Check that your bot token is correct
+   - Make sure the bot is active (send a direct message to it)
+   - Try regenerating the token with BotFather if needed
+
+2. **Group Chat Permissions**:
+   - Make the bot an admin in the group (this is often required)
+   - Ensure the group settings allow bot messages
+   - For privacy-focused groups, you may need to use different settings
+
+3. **Chat ID Format Issues**:
+   - For group chats, the ID must start with a minus sign (-)
+   - For supergroups, the format is usually `-100xxxxxxxxxx`
+   - For regular groups, the format is usually `-xxxxxxxxxx`
+   - Use the debug-telegram-id.yml workflow to check the exact format
+
+4. **Remove Topic ID**:
+   - If using topics, try without the `message_thread_id` parameter first
+   - Some groups don't support topics or handle them differently
+
+5. **Test with Personal Chat**:
+   - Try sending a message to your personal Telegram ID first
+   - If that works, the issue is specific to the group configuration
+
+6. **Create a Fresh Bot**:
+   - Sometimes creating a new bot resolves permission issues
+   - Set it up from scratch with BotFather
+
+7. **Telegram API Rate Limits**:
+   - Telegram has rate limits that might cause temporary failures
+   - Wait a few minutes between attempts

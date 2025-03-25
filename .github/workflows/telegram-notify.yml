@@ -1,4 +1,4 @@
-name: Manual Telegram Notification
+name: Telegram Notification
 on:
   workflow_dispatch:
     inputs:
@@ -11,9 +11,6 @@ on:
         required: false
         type: string
 
-permissions:
-  contents: read
-  
 jobs:
   notify:
     runs-on: ubuntu-latest
@@ -31,13 +28,6 @@ jobs:
           echo "RELEASE_BODY<<EOF" >> $GITHUB_OUTPUT
           echo "$(echo $RELEASE_DATA | jq -r '.body')" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
-      
-      - name: Debug Values
-        run: |
-          echo "Chat ID: ${{ secrets.TELEGRAM_TO }}"
-          echo "Topic ID: ${{ secrets.TELEGRAM_TOPIC_ID }}"
-          echo "Release tag: ${{ github.event.inputs.release_tag }}"
-          # Don't echo the token for security reasons
 
       - name: Send Telegram notification for releases
         uses: appleboy/telegram-action@master
@@ -56,5 +46,4 @@ jobs:
             
             [View Release](https://github.com/${{ github.repository }}/releases/tag/${{ github.event.inputs.release_tag }})
           format: markdown
-          disable_web_page_preview: true
-          debug: true 
+          disable_web_page_preview: true 

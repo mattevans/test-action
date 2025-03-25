@@ -1,0 +1,33 @@
+name: Debug Telegram API
+on:
+  workflow_dispatch:
+    inputs:
+      api_token:
+        description: 'Bot token (keep this private)'
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  
+jobs:
+  debug:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch updates from Telegram API
+        id: fetch_updates
+        run: |
+          echo "Checking for available chats..."
+          RESPONSE=$(curl -s "https://api.telegram.org/bot${{ github.event.inputs.api_token }}/getUpdates")
+          echo "API Response (sanitized):"
+          echo "$RESPONSE" | sed 's/"id":[0-9]*/"id":"[REDACTED]"/g'
+          
+          echo "Looking for chat IDs..."
+          CHAT_IDS=$(echo "$RESPONSE" | grep -o '"chat":{"id":[^,]*' | sed 's/"chat":{"id"://g')
+          
+          if [ -z "$CHAT_IDS" ]; then
+            echo "No chat IDs found. Make sure to send a message to the bot first."
+          else
+            echo "Found these chat IDs (use these with TELEGRAM_TO):"
+            echo "$CHAT_IDS"
+          fi 

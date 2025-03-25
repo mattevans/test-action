@@ -1,0 +1,25 @@
+name: Test Telegram Connection
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send test message directly to group
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_TO }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          message: |
+            🧪 This is a test message from GitHub Actions
+            
+            Repository: ${{ github.repository }}
+            Time: ${{ github.event.repository.updated_at }}
+            
+            If you see this, the connection is working!
+          format: markdown
+          debug: true 
