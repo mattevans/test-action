@@ -1,4 +1,4 @@
-name: Telegram Notification
+name: Manual Telegram Notification
 on:
   workflow_dispatch:
     inputs:
@@ -11,6 +11,9 @@ on:
         required: false
         type: string
 
+permissions:
+  contents: read
+  
 jobs:
   notify:
     runs-on: ubuntu-latest
