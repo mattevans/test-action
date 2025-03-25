@@ -21,6 +21,23 @@ This repository uses [Telegram Notify](https://github.com/marketplace/actions/te
    - `TELEGRAM_TO`: Your chat ID (for group chats, use the format `-1001234567890`)
    - `TELEGRAM_TOPIC_ID`: If using a topic in a group, add the topic ID (e.g., `2`)
 
+### Working with Telegram Topics
+
+If your group has topics enabled:
+
+1. **Topic IDs** are simple numbers:
+   - `1` is usually the General topic (default)
+   - `2`, `3`, etc. for additional topics you create
+   
+2. **Finding the correct Topic ID**:
+   - Create a new topic in your group
+   - Look at the URL when you're in that topic - the last number is often the topic ID
+   - Or use the "Test Telegram Topics" workflow to try different IDs
+   
+3. **Topic testing**:
+   - Use the "Test Telegram Topics" workflow to send test messages to different topics
+   - This helps confirm which topic ID corresponds to which channel
+
 ### Getting the correct Chat ID
 
 If you're using a group chat, make sure to:
@@ -40,7 +57,8 @@ Notifications are only sent manually:
 3. Click "Run workflow" button
 4. Enter the release tag (e.g., `v1.0.0`)
 5. Optionally add a custom message
-6. Click "Run workflow" to send the notification
+6. **Select a topic ID** (leave empty to use the default from secrets)
+7. Click "Run workflow" to send the notification
 
 This allows you to control which releases get announced to your Telegram group.
 
@@ -64,9 +82,11 @@ If you keep seeing "Not Found" errors, try these steps in order:
    - For regular groups, the format is usually `-xxxxxxxxxx`
    - Use the debug-telegram-id.yml workflow to check the exact format
 
-4. **Remove Topic ID**:
-   - If using topics, try without the `message_thread_id` parameter first
-   - Some groups don't support topics or handle them differently
+4. **Topic ID Issues**:
+   - Topic IDs should be simple numbers (`1`, `2`, etc.)
+   - The General topic is usually `1`
+   - Custom topics start from `2` onwards
+   - Try the "Test Telegram Topics" workflow to find the correct IDs
 
 5. **Test with Personal Chat**:
    - Try sending a message to your personal Telegram ID first

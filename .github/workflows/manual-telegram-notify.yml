@@ -10,6 +10,11 @@ on:
         description: 'Additional custom message (optional)'
         required: false
         type: string
+      topic_id:
+        description: 'Topic ID for the message (e.g. 1 for General, 2 for Releases)'
+        required: false
+        type: string
+        default: ''
 
 permissions:
   contents: read
@@ -32,19 +37,21 @@ jobs:
           echo "$(echo $RELEASE_DATA | jq -r '.body')" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
       
-      - name: Debug Values
+      - name: Debug Message Thread ID
         run: |
-          echo "Chat ID: ${{ secrets.TELEGRAM_TO }}"
-          echo "Topic ID: ${{ secrets.TELEGRAM_TOPIC_ID }}"
-          echo "Release tag: ${{ github.event.inputs.release_tag }}"
-          # Don't echo the token for security reasons
+          echo "Using message_thread_id value:"
+          if [ -n "${{ github.event.inputs.topic_id }}" ]; then
+            echo "From workflow input: ${{ github.event.inputs.topic_id }}"
+          else
+            echo "From repository secret: ${{ secrets.TELEGRAM_TOPIC_ID }}"
+          fi
 
       - name: Send Telegram notification for releases
         uses: appleboy/telegram-action@master
         with:
           to: ${{ secrets.TELEGRAM_TO }}
           token: ${{ secrets.TELEGRAM_TOKEN }}
-          message_thread_id: ${{ secrets.TELEGRAM_TOPIC_ID }}
+          message_thread_id: ${{ github.event.inputs.topic_id != '' && github.event.inputs.topic_id || secrets.TELEGRAM_TOPIC_ID }}
           message: |
             🚀 New Release: *${{ github.repository }}* ${{ github.event.inputs.release_tag }}
             
